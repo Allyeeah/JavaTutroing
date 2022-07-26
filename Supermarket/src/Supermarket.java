@@ -5,10 +5,12 @@ public class Supermarket {
     public static void main(String[] args) {
         System.out.println("다예마켓 온 것을 환영합니다~~!"); //ln은 한칸 뛰어주는 것
         Scanner scanner = new Scanner(System.in);
-        String[] goods = new String[5];
-        int price[] = new int[5];
+       Goods[] goodsArr =new Goods[5];
         int index = 0;
         boolean onoff = true;
+
+        for(int n = 0; n<goodsArr.length;n++)
+            goodsArr[n] = new Goods();
 
         while(onoff) {
             System.out.println("1. 상품등록 | 2. 상품조회 | 3. 계산 | 4. 사용종료");
@@ -18,30 +20,40 @@ public class Supermarket {
                 switch (menu) {
                     case 1:
                         System.out.print("상품명을 입력해주세요.>> ");
-                        goods[index%5] = scanner.next();
+                        String name = scanner.next();
+                        System.out.print("생산일자를 입력해주세요.>> ");
+                        String pDate = scanner.next();
                         System.out.print("가격을 입력해주세요.>> ");
-                        price[index%5] = scanner.nextInt();
+                        int price = scanner.nextInt();
+                        if(pDate.equals("0")) {
+                            goodsArr[index] = new Goods(index, name, price);
+                        }
+                        else{
+                            System.out.print("할인율을 입력해주세요.>> ");
+                            float discount = scanner.nextFloat();
+                            goodsArr[index] = new Goods(index, pDate, name, price, discount);
+                        }
                         index++;
-//                        if(index>=5){
+//                        if(index>=5){  %아니면 이거를 써야함
 //                            index = 0;
 //                        }
                         break;
                     case 2:
-                        for (int n = 0; n < goods.length; n++) {
-                            System.out.println("상품번호: "+ n +" | 상품명: " + goods[n] + "| 가격: " + price[n]);
+                        System.out.println("--------------------------------------------------------------");
+                        for (int n = 0; n < goodsArr.length; n++) {
+                            //for (Goods goods : goodsArr)같음
+                            goodsArr[n].inform();
                         }
                         break;
                     case 3:
                         System.out.print("상품번호를 입력헤수세요.>>");
                         int i = scanner.nextInt();
-                        System.out.print(goods[i] + "할인율을 입력해주세요.>> ");
-                        float discount = scanner.nextFloat();
-                        int p = (int) (price[i] - price[i] * (discount / 100));
-                        System.out.println(goods[i] + "의 가격은 " + p + "원입니다.");
-                        break;
+                        System.out.println(goodsArr[i].name + "의 가격은 " + goodsArr[i].discountedPrice() + "원입니다.");
+
                     case 4:
                         System.out.println("이용해주셔서 감사합니다.");
                         onoff = false;
+                        break;
                 }
             }
             catch(InputMismatchException e){
